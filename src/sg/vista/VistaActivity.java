@@ -1,6 +1,7 @@
 package sg.vista;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -9,6 +10,10 @@ public class VistaActivity extends Activity {
     public SharedPreferences config() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         return settings;
+    }
+    
+    public Context c() {
+    	return getApplicationContext();
     }
     
     public Boolean readToken() {

@@ -188,7 +188,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     	rp.put("lat", lat);
     	rp.put("lon", lon);
     	System.out.println("trying...");
-    	Vista.get("/geo/whereami", rp, new Vista.VistaResponse() {
+    	Vista.get(getApplicationContext(), "/geo/whereami", rp, new Vista.VistaResponse() {
     		public void onResponse(JSONObject j) throws JSONException {
     			TextView dummyTextView = (TextView) findViewById(R.id.section_label);
     			if (dummyTextView != null) {

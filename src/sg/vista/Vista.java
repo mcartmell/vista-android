@@ -1,7 +1,13 @@
 package sg.vista;
+import java.lang.reflect.InvocationTargetException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.http.Header;
+
+import android.content.Context;
+import android.widget.Toast;
+
 import com.loopj.android.http.*;
 
 public class Vista {
@@ -20,53 +26,52 @@ public class Vista {
 		userToken = token;
 	}
 	
-	public static void get(String path, RequestParams params, final VistaResponse cb) {
-	AsyncHttpClient client = getClient();
-	String host = "http://192.168.1.6:3000";
-	// String host = "http://vista.herokuapp.com";
-	client.get(host + path, params, new AsyncHttpResponseHandler() {
-	    @Override
-	    public void onSuccess(String response) {
-	    	JSONObject json;
-			try {
-				json = new JSONObject(response);
-		        cb.onResponse(json);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
-	    
-	    @Override
-	    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-	    	System.out.println("Oh no!" + Integer.toString(statusCode));
-	    }
-	});
+	public static void request(final Context ctx, String method, String path, RequestParams rp, final VistaResponse cb) {
+		AsyncHttpClient client = getClient();
+		String host = "http://192.168.1.6:3000";
+		Class[] partypes = new Class[]{String.class, RequestParams.class, ResponseHandlerInterface.class};
+		try {
+			client.getClass().getMethod(method, partypes).invoke(client, host + path, rp, new AsyncHttpResponseHandler() {
+			    @Override
+			    public void onSuccess(String response) {
+			    	JSONObject json;
+					try {
+						json = new JSONObject(response);
+				        cb.onResponse(json);
+					} catch (JSONException e) {
+				    	Toast toast = Toast.makeText(ctx, "Error talking to server.", Toast.LENGTH_SHORT);
+				    	toast.show();
+					}
+			    }
+			    
+			    @Override
+			    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+			    	Toast toast = Toast.makeText(ctx, "Failed to connect. Try again later.", Toast.LENGTH_SHORT);
+			    	toast.show();
+			    }
+			});
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void get(Context ctx, String path, RequestParams params, final VistaResponse cb) {
+		request(ctx, "get", path, params, cb);
 	}
 	
-	public static void post(String path, RequestParams params, final VistaResponse cb) {
-	AsyncHttpClient client = getClient();
-	String host = "http://192.168.1.6:3000";
-	//String host = "http://vista.herokuapp.com";
-	client.post(host + path, params, new AsyncHttpResponseHandler() {
-	    @Override
-	    public void onSuccess(String response) {
-	    	JSONObject json;
-			try {
-				json = new JSONObject(response);
-		        cb.onResponse(json);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    }
-	    
-	    @Override
-	    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-	    	System.out.println("Oh no!" + Integer.toString(statusCode));
-	    }
-	});
+	public static void post(Context ctx, String path, RequestParams params, final VistaResponse cb) {
+		request(ctx, "post", path, params, cb);
 	}
+	
 	public interface VistaResponse {
 		public void onResponse(JSONObject json) throws JSONException;
 	}

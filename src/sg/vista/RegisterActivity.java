@@ -41,7 +41,7 @@ public class RegisterActivity extends VistaActivity {
     	rp.put("email", em);
     	rp.put("password", pass);
     	final VistaActivity a = this;
-    	Vista.post("/api/v1/register.json", rp, new VistaResponse() {
+    	Vista.post(c(), "/api/v1/register.json", rp, new VistaResponse() {
 
 			@Override
 			public void onResponse(JSONObject json) throws JSONException {
