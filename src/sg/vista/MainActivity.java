@@ -1,7 +1,9 @@
 package sg.vista;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +13,9 @@ import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.RequestParams;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,12 +24,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener,GooglePlayServicesClient.ConnectionCallbacks,
@@ -124,6 +130,14 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
+        if (tab.getPosition() == 0) {
+        	try {
+				getLocation();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
     }
 
     @Override
@@ -149,11 +163,20 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             // getItem is called to instantiate the fragment for the given page.
             // Return a DummySectionFragment (defined as a static inner class
             // below) with the page number as its lone argument.
-            Fragment fragment = new DummySectionFragment();
             Bundle args = new Bundle();
-            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-            fragment.setArguments(args);
-            return fragment;
+            args.putInt("section_number", position + 1);
+            Fragment frag = null;
+        	switch (position) {
+        		case 0:
+        			frag = new ShowAreaFragment();
+        		return frag;
+        	}
+        	
+        	if (frag == null) {
+        		frag = new DummySectionFragment();
+        	}
+        	frag.setArguments(args);
+            return frag;
         }
 
         @Override
@@ -167,7 +190,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    return "Current area";
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
                 case 2:
@@ -181,20 +204,55 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     	getLocation();
     }
     public void getLocation() throws JSONException {
+    	if (!mLocationClient.isConnected()) {
+    		return;
+    	}
+    	RequestParams rp = latLongParams();
+    	Log.d("Geo", "trying to get location...");
+    	Vista.get(getApplicationContext(), "/geo/whereami", rp, new Vista.VistaResponse() {
+    		public void onResponse(JSONObject j) throws JSONException {
+    			TextView cur_area = (TextView) findViewById(R.id.current_area);
+    			if (cur_area != null) {
+    				cur_area.setText(j.getJSONObject("area").getString("name"));
+    			}
+    			TextView cur_sz = (TextView) findViewById(R.id.current_subzone);
+    			if (cur_sz != null) {
+    				cur_sz.setText(j.getJSONObject("subzone").getString("name"));
+    			}
+    			getNearbyVistas();
+    		}
+    	});
+    }
+    
+    public RequestParams latLongParams() {
     	RequestParams rp = new RequestParams();
     	Location loc = mLocationClient.getLastLocation();
     	String lat = Double.toString(loc.getLatitude());
     	String lon = Double.toString(loc.getLongitude());
     	rp.put("lat", lat);
-    	rp.put("lon", lon);
-    	System.out.println("trying...");
-    	Vista.get(getApplicationContext(), "/geo/whereami", rp, new Vista.VistaResponse() {
-    		public void onResponse(JSONObject j) throws JSONException {
-    			TextView dummyTextView = (TextView) findViewById(R.id.section_label);
-    			if (dummyTextView != null) {
-    				dummyTextView.setText(j.getString("name"));
-    			}
-    		}
+    	rp.put("lon", lon);    	
+    	return rp;
+    }
+    
+    public void getNearbyVistas() throws JSONException {
+    	RequestParams rp = latLongParams();
+    	Vista.get(getApplicationContext(), "/geo/vistas", rp, new Vista.VistaResponse() {
+    	Context ctx = getApplicationContext();	
+			@Override
+			public void onResponse(JSONObject json) throws JSONException {
+	            ArrayList<VistaItem> vistas = new ArrayList<VistaItem>();
+				JSONArray vistas_j = json.getJSONArray("vistas");
+	            for (int i = 0; i < vistas_j.length(); i++) {
+	                JSONObject jo = vistas_j.getJSONObject(i);
+	                String name = jo.getString("name");
+	                String desc = jo.getString("description");
+	                VistaItem vista = new VistaItem(name,desc,"");
+	                vistas.add(vista);
+	            }
+	            ListView lv = (ListView) findViewById(R.id.area_vistas_list);
+	            VistaAdapter adapter = new VistaAdapter(vistas, ctx);
+	            lv.setAdapter(adapter);
+			}
     	});
     }
 
@@ -221,7 +279,24 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             return rootView;
         }
     }
-
+    
+    public static class ShowAreaFragment extends Fragment {
+    	public ShowAreaFragment() {
+    	}
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_show_area, container, false);
+            // rootView.setTag(getArguments().getInt("section_number"));
+            return rootView;
+        }
+        
+        @Override
+        public void onHiddenChanged(boolean hidden) {
+        	Log.i("Test", "RESUMED!!!");
+        }
+        
+        
+    }
+    
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// TODO Auto-generated method stub
