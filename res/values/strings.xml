@@ -7,5 +7,7 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="show_location_button">Where am I?</string>
+    <string name="title_activity_vista_item">VistaItemActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

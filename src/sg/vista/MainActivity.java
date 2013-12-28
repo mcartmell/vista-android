@@ -16,6 +16,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -244,14 +246,25 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 				JSONArray vistas_j = json.getJSONArray("vistas");
 	            for (int i = 0; i < vistas_j.length(); i++) {
 	                JSONObject jo = vistas_j.getJSONObject(i);
-	                String name = jo.getString("name");
-	                String desc = jo.getString("description");
-	                VistaItem vista = new VistaItem(name,desc,"");
+	                VistaItem vista = VistaItem.fromJSON(jo);
 	                vistas.add(vista);
 	            }
 	            ListView lv = (ListView) findViewById(R.id.area_vistas_list);
-	            VistaAdapter adapter = new VistaAdapter(vistas, ctx);
+	            final VistaAdapter adapter = new VistaAdapter(vistas, ctx);
 	            lv.setAdapter(adapter);
+	            lv.setClickable(true);
+	            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int position, long arg3) {
+						VistaItem vi = (VistaItem) adapter.getItem(position);
+			            Intent i = new Intent(getApplicationContext(), VistaItemActivity.class);
+			            Bundle b = new Bundle();
+			            b.putString("vista_id", vi.vista_id);
+			            i.putExtras(b);
+			            startActivity(i);
+					}
+				});
 			}
     	});
     }

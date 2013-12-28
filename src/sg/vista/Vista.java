@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.apache.http.Header;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.loopj.android.http.*;
@@ -35,7 +36,8 @@ public class Vista {
 			    @Override
 			    public void onSuccess(String response) {
 			    	JSONObject json;
-					try {
+					Log.d("Got response", response);
+			    	try {
 						json = new JSONObject(response);
 				        cb.onResponse(json);
 					} catch (JSONException e) {
