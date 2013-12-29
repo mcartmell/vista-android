@@ -9,5 +9,8 @@
     <string name="show_location_button">Where am I?</string>
     <string name="title_activity_vista_item">VistaItemActivity</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="upload_photo_label">Upload photo</string>
+	<string name="take_photo_label">Take photo</string>
+	<string name="your_photos">Your photos</string>
+	
 </resources>

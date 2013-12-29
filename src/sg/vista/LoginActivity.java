@@ -60,6 +60,7 @@ public class LoginActivity extends VistaActivity {
 				a.saveToken(em, token);
 				
 				// Start main activity
+				readToken();
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
 			}

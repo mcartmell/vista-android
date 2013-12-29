@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name="sg.vista.VistaItemActivity"
-            android:label="@string/title_activity_vista_item" >
+            android:label="@string/app_name" >
         </activity>
     </application>
 

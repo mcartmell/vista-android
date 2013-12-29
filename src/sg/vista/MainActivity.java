@@ -194,9 +194,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 case 0:
                     return "Current area";
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    return "My account";
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+                    return "Explore";
             }
             return null;
         }
@@ -287,8 +287,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_dummy, container, false);
-            TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-            dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }

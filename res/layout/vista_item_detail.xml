@@ -1,43 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/name"
+<LinearLayout     android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10sp" >
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:gravity="center" />
+        android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/BigHeading" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/visited_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:src="@android:drawable/btn_star_big_off" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vista_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/vista_main_photo"
+            android:layout_width="128dp"
+            android:layout_height="128dp" />
+        <TextView
+            android:id="@+id/vista_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/vista_directions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    
     <Button
         android:id="@+id/btn_take_photo"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Button"
-        android:onClick="takePhoto" />
-
+        android:onClick="takePhoto"
+        android:text="@string/take_photo_label" />
     <LinearLayout
         android:id="@+id/upload_photo_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <ImageView
             android:id="@+id/photo_preview"
             android:layout_width="128dp"
             android:layout_height="128dp"
-            android:src="@drawable/common_signin_btn_icon_dark" />
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/btn_upload_photo"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="@string/upload_photo_label"
             android:onClick="uploadPhoto" />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_photos"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <HorizontalScrollView
+        android:id="@+id/user_images"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/user_images_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="10sp">
+        </LinearLayout>
+    </HorizontalScrollView>
+
 </LinearLayout>
+    </ScrollView>

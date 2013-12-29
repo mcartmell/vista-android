@@ -14,9 +14,11 @@ import com.loopj.android.http.*;
 public class Vista {
 	public static String userEmail = null;
 	public static String userToken = null;
-	
+	public static final int DEFAULT_TIMEOUT = 20 * 1000;
+
 	private static AsyncHttpClient getClient() {
 		AsyncHttpClient ah = new AsyncHttpClient();
+		ah.setTimeout(DEFAULT_TIMEOUT);
 		ah.addHeader("X-User-Email", userEmail);
 		ah.addHeader("X-User-Token", userToken);
 		return ah;
@@ -29,7 +31,9 @@ public class Vista {
 	
 	public static void request(final Context ctx, String method, String path, RequestParams rp, final VistaResponse cb) {
 		AsyncHttpClient client = getClient();
-		String host = "http://192.168.1.7:3000";
+
+		String host = "http://192.168.1.2:3000";
+		//String host = "http://vista.herokuapp.com";
 		Class[] partypes = new Class[]{String.class, RequestParams.class, ResponseHandlerInterface.class};
 		try {
 			client.getClass().getMethod(method, partypes).invoke(client, host + path, rp, new AsyncHttpResponseHandler() {
@@ -41,6 +45,7 @@ public class Vista {
 						json = new JSONObject(response);
 				        cb.onResponse(json);
 					} catch (JSONException e) {
+						Log.d("JSON", e.getMessage());
 				    	Toast toast = Toast.makeText(ctx, "Error talking to server.", Toast.LENGTH_SHORT);
 				    	toast.show();
 					}
