@@ -41,7 +41,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
 	LocationClient mLocationClient;
 	JSONObject mLocation;
-	JSONObject mVistas;
 	Fragment[] mFragments = new Fragment[3];
 	
     /**
@@ -144,11 +143,17 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        	break;
         case 1:
         	if (mFragments[1] != null) {
         	  ((ProfileFragment) mFragments[1]).refresh();
         	}
+        	break;
         case 2:
+        	if (mFragments[2] != null) {
+          	  ((ExploreFragment) mFragments[2]).refresh();
+          	}
+        	break;
         default: ;
         }
     }
@@ -187,6 +192,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         		case 1:
         			frag = new ProfileFragment();
         			break;
+        		case 2:
+        			frag = new ExploreFragment();
+        			break;
         		default:
         			frag = new DummySectionFragment();
         			break;
@@ -217,9 +225,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         }
     }
     
-    public void test(View view) throws JSONException {
-    	getLocation();
-    }
     public void getLocation() throws JSONException {
     	if (!mLocationClient.isConnected()) {
     		return;
@@ -253,49 +258,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     }
     
     public void getNearbyVistas() throws JSONException {
-    	RequestParams rp = new RequestParams();
-    	rp.put("area_name", mLocation.getJSONObject("area").getString("name"));
-    	Vista.get(getApplicationContext(), "/geo/vistas", rp, new Vista.VistaResponse() {
-    	Context ctx = getApplicationContext();	
-			@Override
-			public void onResponse(JSONObject json) throws JSONException {
-	            ArrayList<VistaItem> vistas = new ArrayList<VistaItem>();
-				JSONArray vistas_j = json.getJSONArray("vistas");
-				mVistas = json;
-	            for (int i = 0; i < vistas_j.length(); i++) {
-	                JSONObject jo = vistas_j.getJSONObject(i);
-	                VistaItem vista = VistaItem.fromJSON(jo);
-	                vistas.add(vista);
-	            }
-	            ListView lv = (ListView) findViewById(R.id.area_vistas_list);
-	            final VistaAdapter adapter = new VistaAdapter(vistas, ctx);
-	            if (lv != null) {
-	            lv.setAdapter(adapter);
-	            lv.setClickable(true);
-	            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int position, long arg3) {
-						VistaItem vi = (VistaItem) adapter.getItem(position);
-			            Intent i = new Intent(getApplicationContext(), VistaItemActivity.class);
-			            Bundle b = new Bundle();
-			            b.putString("vista_id", vi.vista_id);
-			            i.putExtras(b);
-			            startActivity(i);
-					}
-				});
-	            }
-	            
-	            // Set stats
-	            setStats();
-			}
-    	});
-    }
-    
-    public void setStats() throws JSONException {
-    	int visited = mVistas.getInt("visited");
-    	int total = mVistas.getInt("total");
-    	((TextView) findViewById(R.id.area_short_stats)).setText(Integer.toString(visited) + "/" + Integer.toString(total));
+    	String area_name = mLocation.getJSONObject("area").getString("name");
+    	((ShowAreaFragment) mFragments[0]).getVistas(area_name);
     }
 
     /**
@@ -320,19 +284,23 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         }
     }
     
-    public static class ShowAreaFragment extends Fragment {
-    	public ShowAreaFragment() {
-    	}
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_show_area, container, false);
-            return rootView;
-        }        
-    }
-    
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mLocationClient.isConnected()) {
+			try {
+				getLocation();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
