@@ -40,6 +40,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 GooglePlayServicesClient.OnConnectionFailedListener {
 
 	LocationClient mLocationClient;
+	JSONObject mLocation;
+	JSONObject mVistas;
+	Fragment[] mFragments = new Fragment[3];
 	
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -88,6 +91,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+        	
             // Create a tab with text corresponding to the page title defined by
             // the adapter. Also specify this Activity object, which implements
             // the TabListener interface, as the callback (listener) for when
@@ -132,13 +136,20 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
-        if (tab.getPosition() == 0) {
+        switch(tab.getPosition()) {
+        case 0:
         	try {
 				getLocation();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        case 1:
+        	if (mFragments[1] != null) {
+        	  ((ProfileFragment) mFragments[1]).refresh();
+        	}
+        case 2:
+        default: ;
         }
     }
 
@@ -168,16 +179,20 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             Bundle args = new Bundle();
             args.putInt("section_number", position + 1);
             Fragment frag = null;
+            Log.i("", "CREATING FRAGMENT " + Integer.toString(position));
         	switch (position) {
         		case 0:
         			frag = new ShowAreaFragment();
-        		return frag;
-        	}
-        	
-        	if (frag == null) {
-        		frag = new DummySectionFragment();
+        			break;
+        		case 1:
+        			frag = new ProfileFragment();
+        			break;
+        		default:
+        			frag = new DummySectionFragment();
+        			break;
         	}
         	frag.setArguments(args);
+        	mFragments[position] = frag;
             return frag;
         }
 
@@ -194,7 +209,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
                 case 0:
                     return "Current area";
                 case 1:
-                    return "My account";
+                    return "My profile";
                 case 2:
                     return "Explore";
             }
@@ -213,6 +228,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     	Log.d("Geo", "trying to get location...");
     	Vista.get(getApplicationContext(), "/geo/whereami", rp, new Vista.VistaResponse() {
     		public void onResponse(JSONObject j) throws JSONException {
+    			mLocation = j;
     			TextView cur_area = (TextView) findViewById(R.id.current_area);
     			if (cur_area != null) {
     				cur_area.setText(j.getJSONObject("area").getString("name"));
@@ -237,13 +253,15 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     }
     
     public void getNearbyVistas() throws JSONException {
-    	RequestParams rp = latLongParams();
+    	RequestParams rp = new RequestParams();
+    	rp.put("area_name", mLocation.getJSONObject("area").getString("name"));
     	Vista.get(getApplicationContext(), "/geo/vistas", rp, new Vista.VistaResponse() {
     	Context ctx = getApplicationContext();	
 			@Override
 			public void onResponse(JSONObject json) throws JSONException {
 	            ArrayList<VistaItem> vistas = new ArrayList<VistaItem>();
 				JSONArray vistas_j = json.getJSONArray("vistas");
+				mVistas = json;
 	            for (int i = 0; i < vistas_j.length(); i++) {
 	                JSONObject jo = vistas_j.getJSONObject(i);
 	                VistaItem vista = VistaItem.fromJSON(jo);
@@ -251,6 +269,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	            }
 	            ListView lv = (ListView) findViewById(R.id.area_vistas_list);
 	            final VistaAdapter adapter = new VistaAdapter(vistas, ctx);
+	            if (lv != null) {
 	            lv.setAdapter(adapter);
 	            lv.setClickable(true);
 	            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -265,8 +284,18 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			            startActivity(i);
 					}
 				});
+	            }
+	            
+	            // Set stats
+	            setStats();
 			}
     	});
+    }
+    
+    public void setStats() throws JSONException {
+    	int visited = mVistas.getInt("visited");
+    	int total = mVistas.getInt("total");
+    	((TextView) findViewById(R.id.area_short_stats)).setText(Integer.toString(visited) + "/" + Integer.toString(total));
     }
 
     /**
@@ -296,16 +325,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     	}
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_show_area, container, false);
-            // rootView.setTag(getArguments().getInt("section_number"));
             return rootView;
-        }
-        
-        @Override
-        public void onHiddenChanged(boolean hidden) {
-        	Log.i("Test", "RESUMED!!!");
-        }
-        
-        
+        }        
     }
     
 	@Override
