@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
         </LinearLayout>
 
             <TextView
@@ -39,6 +40,13 @@
                 android:drawableRight="@android:drawable/btn_star_big_on" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/area_static_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp" />
 
     <ListView
         android:id="@+id/area_vistas_list"

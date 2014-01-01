@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -80,6 +81,10 @@ public class ShowAreaFragment extends Fragment {
 
 				// Set stats
 				setStats();
+				
+				// Set static map
+				String mapURL = json.getString("static_map");
+				DownloadImageTask.dl(mapURL, (ImageView) mRootView.findViewById(R.id.area_static_map));
 			}
 		});
 	}
