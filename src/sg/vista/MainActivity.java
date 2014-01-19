@@ -43,7 +43,6 @@ import java.net.URL;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener,GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener {
 
-	LocationClient mLocationClient;
 	JSONObject mLocation;
 	Fragment[] mFragments = new Fragment[3];
 	
@@ -80,7 +79,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // Create location client
-        mLocationClient = new LocationClient(this, this, this);
+        Vista.mLocationClient = new LocationClient(this, this, this);
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -113,7 +112,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     protected void onStart() {
         super.onStart();
         // Connect the client.
-        mLocationClient.connect();
+        Vista.mLocationClient.connect();
         
     }
     
@@ -123,7 +122,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
+        Vista.mLocationClient.disconnect();
         super.onStop();
     }
     
@@ -230,10 +229,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     }
     
     public void getLocation() throws JSONException {
-    	if (!mLocationClient.isConnected()) {
+    	if (!Vista.mLocationClient.isConnected()) {
     		return;
     	}
-    	RequestParams rp = latLongParams();
+    	RequestParams rp = Vista.latLongParams();
     	Log.d("Geo", "trying to get location...");
     	Vista.get(getApplicationContext(), "/geo/whereami", rp, new Vista.VistaResponse() {
     		public void onResponse(JSONObject j) throws JSONException {
@@ -249,16 +248,6 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     			getNearbyVistas();
     		}
     	});
-    }
-    
-    public RequestParams latLongParams() {
-    	RequestParams rp = new RequestParams();
-    	Location loc = mLocationClient.getLastLocation();
-    	String lat = Double.toString(loc.getLatitude());
-    	String lon = Double.toString(loc.getLongitude());
-    	rp.put("lat", lat);
-    	rp.put("lon", lon);    	
-    	return rp;
     }
     
     public void getNearbyVistas() throws JSONException {
@@ -297,7 +286,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mLocationClient.isConnected()) {
+		if (Vista.mLocationClient.isConnected()) {
 			try {
 				getLocation();
 			} catch (JSONException e) {

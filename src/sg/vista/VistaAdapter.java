@@ -42,10 +42,12 @@ public class VistaAdapter extends BaseAdapter {
         assert v != null;
         TextView vname = (TextView) v.findViewById(R.id.vista_name);
         TextView vdesc = (TextView)v.findViewById(R.id.vista_description);
+        TextView vdist = (TextView) v.findViewById(R.id.vista_dis);
 
         VistaItem vista = vistas.get(i);
         vname.setText(vista.name);
         vdesc.setText(vista.description);
+        vdist.setText(vista.distance + " km");
         return v;
 	}
 

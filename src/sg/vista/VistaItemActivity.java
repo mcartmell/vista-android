@@ -46,6 +46,7 @@ public class VistaItemActivity extends VistaActivity {
 	LinearLayout mUserPhotos;
 	
 	ImageView iv;
+	ImageView mMainPhoto;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class VistaItemActivity extends VistaActivity {
 		iv = (ImageView) findViewById(R.id.photo_preview);
         mPhotoBar = (LinearLayout) findViewById(R.id.upload_photo_bar);
         mUserPhotos = (LinearLayout) findViewById(R.id.user_images_ll);
+        mMainPhoto = (ImageView) findViewById(R.id.vista_main_photo);
 	}
 
 	@Override
@@ -75,6 +77,7 @@ public class VistaItemActivity extends VistaActivity {
 		Intent i = getIntent();
 		Bundle b = i.getExtras();
 		String vista_id = b.getString("vista_id");
+		
 		displayVistaDetails(vista_id);
 		mPhotoBar.setVisibility(View.GONE);
 		Log.i("","starting");
@@ -113,7 +116,8 @@ public class VistaItemActivity extends VistaActivity {
 	
 	public void displayVistaDetails(String vista_id) {
 		final View rootView = getWindow().getDecorView().getRootView();
-		Vista.get(c(), "/vistas/" + vista_id, new RequestParams(), new VistaResponse() {
+		RequestParams rp = Vista.latLongParams();
+		Vista.get(c(), "/vistas/" + vista_id, rp, new VistaResponse() {
 
 			@Override
 			public void onResponse(JSONObject json) throws JSONException {
@@ -135,6 +139,10 @@ public class VistaItemActivity extends VistaActivity {
 			    	tDirecs.setText(Html.fromHtml(htmlDirections));
 			    }
 			    setVisited(vi.visited);
+			    
+			    // Load image thumbnail
+			    DownloadImageTask.dl(json.getString("photo_thumb"), mMainPhoto);
+			    
 			}
 		});
 	}
@@ -229,6 +237,16 @@ public class VistaItemActivity extends VistaActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+    
+    public void getDirections(View v) {
+    	double from_lat = Vista.mLastLocation.getLatitude();
+    	double from_lon = Vista.mLastLocation.getLongitude();
+    	double to_lat = mCurrentVista.lat;
+    	double to_lon = mCurrentVista.lon;
+    	String maps_url = "http://maps.google.com/maps?saddr=" + Double.toString(from_lat) + "," + Double.toString(from_lon) + "&daddr=" + Double.toString(to_lat) + "," + Double.toString(to_lon);
+    	Intent i = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(maps_url));
+    	startActivity(i);
     }
 
 }

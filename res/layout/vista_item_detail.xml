@@ -18,16 +18,24 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/BigHeading" />
+            android:textAppearance="@style/BigHeading"
+            android:paddingBottom="4dp" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent" >
-
+            <ImageView
+                android:id="@+id/directions_img"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_toLeftOf="@+id/visited_icon"
+                android:gravity="right"
+                android:src="@drawable/maps_icon"
+                android:onClick="getDirections" />
             <ImageView
                 android:id="@+id/visited_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:gravity="right"
                 android:src="@android:drawable/btn_star_big_off" />
@@ -48,7 +56,8 @@
         <TextView
             android:id="@+id/vista_description"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp" />
     </LinearLayout>
 
         <TextView

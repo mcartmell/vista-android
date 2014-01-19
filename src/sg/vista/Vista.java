@@ -6,16 +6,20 @@ import org.json.JSONObject;
 import org.apache.http.Header;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationClient;
 import com.loopj.android.http.*;
 
 public class Vista {
 	public static String userEmail = null;
 	public static String userToken = null;
 	public static final int DEFAULT_TIMEOUT = 20 * 1000;
-
+    public static LocationClient mLocationClient = null;
+    public static Location mLastLocation;
+	
 	private static AsyncHttpClient getClient() {
 		AsyncHttpClient ah = new AsyncHttpClient();
 		ah.setTimeout(DEFAULT_TIMEOUT);
@@ -32,7 +36,7 @@ public class Vista {
 	public static void request(final Context ctx, String method, String path, RequestParams rp, final VistaResponse cb) {
 		AsyncHttpClient client = getClient();
 
-		String host = "http://192.168.1.2:3000";
+		String host = "http://192.168.1.6:3000";
 		//String host = "http://vista.herokuapp.com";
 		Class[] partypes = new Class[]{String.class, RequestParams.class, ResponseHandlerInterface.class};
 		try {
@@ -82,6 +86,26 @@ public class Vista {
 	public interface VistaResponse {
 		public void onResponse(JSONObject json) throws JSONException;
 	}
+	
+	public static void refreshLocation() {
+      if (mLocationClient.isConnected()) {
+      	Location loc = mLocationClient.getLastLocation();
+        mLastLocation = loc;
+      }
+	}
+    public static RequestParams latLongParams() {
+    	refreshLocation();
+    	RequestParams rp = new RequestParams();
+    	if (mLastLocation != null) {
+    	  String lat = Double.toString(mLastLocation.getLatitude());
+    	  String lon = Double.toString(mLastLocation.getLongitude());
+    	  rp.put("lat", lat);
+    	  rp.put("lon", lon);
+    	}
+    	return rp;
+    }
+    
+    
 }
 
 

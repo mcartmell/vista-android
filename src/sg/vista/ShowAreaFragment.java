@@ -46,7 +46,7 @@ public class ShowAreaFragment extends Fragment {
 		}
 	}
 	public void getVistas(String area_name) throws JSONException {
-		RequestParams rp = new RequestParams();
+		RequestParams rp = Vista.latLongParams();
 		rp.put("area_name", area_name);
 		Vista.get(getActivity().getApplicationContext(), "/geo/vistas", rp, new Vista.VistaResponse() {
 			Context ctx = getActivity().getApplicationContext();	
