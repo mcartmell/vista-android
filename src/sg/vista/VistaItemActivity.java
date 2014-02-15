@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,17 +45,16 @@ public class VistaItemActivity extends VistaActivity {
 	VistaItem mCurrentVista;
 	LinearLayout mPhotoBar;
 	LinearLayout mUserPhotos;
+	FrameLayout mUserPhotoFrame;
 	
-	ImageView iv;
 	ImageView mMainPhoto;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.vista_item_detail);
-		iv = (ImageView) findViewById(R.id.photo_preview);
-        mPhotoBar = (LinearLayout) findViewById(R.id.upload_photo_bar);
         mUserPhotos = (LinearLayout) findViewById(R.id.user_images_ll);
+        mUserPhotoFrame = (FrameLayout) findViewById(R.id.frame_user_photos);
         mMainPhoto = (ImageView) findViewById(R.id.vista_main_photo);
 	}
 
@@ -79,7 +79,6 @@ public class VistaItemActivity extends VistaActivity {
 		String vista_id = b.getString("vista_id");
 		
 		displayVistaDetails(vista_id);
-		mPhotoBar.setVisibility(View.GONE);
 		Log.i("","starting");
 		loadUserPhotos(vista_id);
 	}
@@ -96,6 +95,7 @@ public class VistaItemActivity extends VistaActivity {
 				llp.setMargins(10,0,0,0);
 				JSONArray a = json.getJSONArray("photos");
 				// For each photo
+				mUserPhotoFrame.setVisibility(View.GONE);
 				for (int i = 0; i < a.length(); i++) {
 					JSONObject photo = (JSONObject) a.get(i);
 					String thumbUrl = photo.getString("thumb");
@@ -109,7 +109,9 @@ public class VistaItemActivity extends VistaActivity {
 					// Start download task
 					DownloadImageTask.dl(thumbUrl, newIV);
 				}
-				// For each photo
+				if (a.length() > 0) {
+					mUserPhotoFrame.setVisibility(View.VISIBLE);
+				}
 			}			
 		});
 	}
@@ -127,8 +129,11 @@ public class VistaItemActivity extends VistaActivity {
 				tName.setText(vi.name);
 				TextView tDesc = (TextView) rootView.findViewById(R.id.vista_description);
 				TextView tDirecs = (TextView) rootView.findViewById(R.id.vista_directions);
-				
-			    String htmlInfo = "<h3>Description</h3>" + "<p>" + vi.description + "</p>";
+				String description = vi.description;
+				if (description.isEmpty()) {
+					description = "There is no description for this place yet.";
+				}
+			    String htmlInfo = "<h3>Description</h3>" + "<p>" + description + "</p>";
 			    tDesc.setText(Html.fromHtml(htmlInfo));
 			    if (vi.directions.isEmpty()) {
 			    	tDirecs.setVisibility(View.GONE);
@@ -195,13 +200,13 @@ public class VistaItemActivity extends VistaActivity {
 
     	newExif.saveAttributes();
         rp.put("file", new File(mCurrentPhotoPath));
+        Log.i("","uploading photo...");
         Vista.post(c(), "/vistas/" + mCurrentVista.vista_id + "/vista_photos", rp, new Vista.VistaResponse() {
 			
 			@Override
 			public void onResponse(JSONObject json) throws JSONException {
 				// Uploaded!
 				Log.d("VistaItem", "Got response from photo upload");
-				mPhotoBar.setVisibility(View.GONE);
 				// Refresh photos
 				loadUserPhotos(mCurrentVista.vista_id);
 				// Set the visited badge
@@ -212,14 +217,21 @@ public class VistaItemActivity extends VistaActivity {
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        resuming_from_activity = true;
+
         if (resultCode == RESULT_OK)
         {
         	Log.i("","GOT PHOTO!" + mCurrentPhotoPath);
         	File file = new File(mCurrentPhotoPath);
-        	iv.setImageURI(Uri.fromFile(file));
-    		mPhotoBar.setVisibility(View.VISIBLE);
-            resuming_from_activity = true;
+            // upload the photo immediately
+            try {
+    			uploadPhoto(null);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
         }
+
     }
 
     private File createImageFile() throws IOException {

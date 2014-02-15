@@ -1,117 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-<LinearLayout     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10sp" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/BigHeading"
-            android:paddingBottom="4dp" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent" >
-            <ImageView
-                android:id="@+id/directions_img"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_toLeftOf="@+id/visited_icon"
-                android:gravity="right"
-                android:src="@drawable/maps_icon"
-                android:onClick="getDirections" />
-            <ImageView
-                android:id="@+id/visited_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentRight="true"
-                android:gravity="right"
-                android:src="@android:drawable/btn_star_big_off" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/vista_information"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/vista_main_photo"
-            android:layout_width="128dp"
-            android:layout_height="128dp" />
-        <TextView
-            android:id="@+id/vista_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp" />
-    </LinearLayout>
-
-        <TextView
-            android:id="@+id/vista_directions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    
-    <Button
-        android:id="@+id/btn_take_photo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="takePhoto"
-        android:text="@string/take_photo_label" />
-    <LinearLayout
-        android:id="@+id/upload_photo_bar"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/photo_preview"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_gravity="center" />
-
-        <Button
-            android:id="@+id/btn_upload_photo"
+        <LinearLayout
+            style="@style/BorderBoxWide"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/upload_photo_label"
-            android:onClick="uploadPhoto" />
+            android:orientation="horizontal" >
 
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:textAppearance="@style/BigHeading" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:id="@+id/directions_img"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_toLeftOf="@+id/visited_icon"
+                    android:gravity="right"
+                    android:onClick="getDirections"
+                    android:src="@drawable/maps_icon" />
+
+                <ImageView
+                    android:id="@+id/visited_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="right"
+                    android:src="@android:drawable/btn_star_big_off" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            style="@style/BorderBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/vista_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/vista_main_photo"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp" />
+
+                <TextView
+                    android:id="@+id/vista_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/vista_directions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_take_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:onClick="takePhoto"
+            android:text="@string/take_photo_label" />
+
+
+        <FrameLayout
+            style="@style/BorderBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/frame_user_photos" 
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_photos"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <HorizontalScrollView
+                android:id="@+id/user_images"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/user_images_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="10sp" >
+                </LinearLayout>
+            </HorizontalScrollView>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_photos"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <HorizontalScrollView
-        android:id="@+id/user_images"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <LinearLayout
-            android:id="@+id/user_images_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="10sp">
-        </LinearLayout>
-    </HorizontalScrollView>
-
-</LinearLayout>
-    </ScrollView>
+</ScrollView>

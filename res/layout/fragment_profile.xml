@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        style="@style/BorderBox" />
+        style="@style/BorderBoxWide" />
 
     <TextView
         android:padding="20dp"
