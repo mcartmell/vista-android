@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    style="@style/BorderBox"
+>
 
     <TextView
+        style="@style/TVStyle"
         android:id="@+id/area_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#000000" />
+        android:textColor="#000000"
+        android:textSize="18sp"
+     />
 
     <TextView
+        style="@style/TVStyle"
         android:id="@+id/area_vistas_desc"
         android:gravity="center"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textSize="12sp"
+      />
+
 
 </LinearLayout>
+    </FrameLayout>

@@ -3,9 +3,10 @@ package sg.vista;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class VistaActivity extends Activity {
+public class VistaActivity extends ActionBarActivity {
     public static final String PREFS_NAME = "VistaPrefs";
     public SharedPreferences config() {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);

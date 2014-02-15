@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+<LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    style="@style/BorderBox" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -10,6 +14,7 @@
         android:orientation="horizontal" >
 
         <TextView
+            style="@style/TVStyle"
             android:id="@+id/vista_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,6 +23,7 @@
             android:textColor="#000000" />
 
         <TextView
+            style="@style/TVStyle"
             android:id="@+id/vista_dis"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -32,6 +38,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
+            style="@style/TVStyle"
             android:id="@+id/textView2"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -41,17 +48,19 @@
     		android:layout_height="match_parent"
     		android:orientation="vertical" >
         <TextView
+            style="@style/TVStyle"
             android:id="@+id/vista_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#000000"/>
 	    <TextView
+	        style="@style/TVStyle"
             android:id="@+id/vista_directions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 	</LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
+</FrameLayout>

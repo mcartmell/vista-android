@@ -1,22 +1,38 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
+	<color name="bg">#F7FFF9</color>
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme" parent="Theme.Vista">
+        <item name="android:fontFamily">sans-serif-light</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
+    <item name="android:textViewStyle">@style/TVStyle</item>
+    <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+    <item name="android:listViewStyle">@style/MyListViewStyle</item>
+     </style>
      <style name="BigHeading">
             <item name="android:textSize">24sp</item>
         </style>
+<style name="TVStyle" parent="android:Widget.TextView">
+    <item name="android:fontFamily">sans-serif-light</item>
+</style>
+
+<style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textColor">#000000</item>
+</style>
+<style name="MyListViewStyle" parent="android:Widget.Holo.ListView">
+	<item name="android:textViewStyle">@style/TVStyle</item>
+	<item name="android:fontFamily">sans-serif-light</item>
+	<item name="android:divider">#00000000</item>
+</style>
+<style name="DarkBackground">
+    <!--  <item name="android:background">@color/bg</item> -->
+</style>
+<style name="BorderBox">
+    <item name="android:padding">12dp</item>
+    <item name="android:background">@drawable/bottom_border</item>
+    <item name="android:layout_marginLeft">20dp</item>
+    <item name="android:layout_marginRight">20dp</item>
+    <item name="android:layout_marginBottom">20dp</item>
+    
+</style>
 </resources>

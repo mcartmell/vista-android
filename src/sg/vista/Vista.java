@@ -36,7 +36,7 @@ public class Vista {
 	public static void request(final Context ctx, String method, String path, RequestParams rp, final VistaResponse cb) {
 		AsyncHttpClient client = getClient();
 
-		String host = "http://192.168.1.6:3000";
+		String host = "http://192.168.1.105:3000";
 		//String host = "http://vista.herokuapp.com";
 		Class[] partypes = new Class[]{String.class, RequestParams.class, ResponseHandlerInterface.class};
 		try {
