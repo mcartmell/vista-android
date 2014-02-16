@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,9 +41,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener,GooglePlayServicesClient.ConnectionCallbacks,
+public class MainActivity extends VistaFragmentActivity implements ActionBar.TabListener,GooglePlayServicesClient.ConnectionCallbacks,
 GooglePlayServicesClient.OnConnectionFailedListener {
 
+	public static final int TWITTER_INTENT = 0;
 	JSONObject mLocation;
 	Fragment[] mFragments = new Fragment[3];
 	
@@ -113,6 +115,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         super.onStart();
         // Connect the client.
         Vista.mLocationClient.connect();
+        setTwitterToken();
         
     }
     
@@ -311,5 +314,22 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		// TODO Auto-generated method stub
 		
 	}
-
+    
+    public void connectTwitter(View v) {
+        Intent intent = new Intent(this, TwitterAuth.class);
+        startActivityForResult(intent, TWITTER_INTENT);
+    }
+    
+    public void testTwitter(View v) {
+    	Twitter.getInstance().postTweet("-_-");
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TWITTER_INTENT && resultCode == RESULT_OK) {
+        	saveTwitterToken(data);
+        	((ProfileFragment) mFragments[1]).refresh();
+        }
+    }
 }

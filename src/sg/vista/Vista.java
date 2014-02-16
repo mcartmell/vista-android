@@ -36,7 +36,7 @@ public class Vista {
 	public static void request(final Context ctx, String method, String path, RequestParams rp, final VistaResponse cb) {
 		AsyncHttpClient client = getClient();
 
-		String host = "http://192.168.1.105:3000";
+		String host = "http://192.168.0.19:3000";
 		//String host = "http://vista.herokuapp.com";
 		Class[] partypes = new Class[]{String.class, RequestParams.class, ResponseHandlerInterface.class};
 		try {
@@ -103,6 +103,12 @@ public class Vista {
     	  rp.put("lon", lon);
     	}
     	return rp;
+    }
+    public static String latitude() {
+    	return Double.toString(mLastLocation.getLatitude());
+    }
+    public static String longitude() {
+    	return Double.toString(mLastLocation.getLongitude());
     }
     
     

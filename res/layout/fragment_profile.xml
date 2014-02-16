@@ -6,18 +6,71 @@
 
     <TextView
         android:id="@+id/user_name"
+        style="@style/BorderBoxWide"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        style="@style/BorderBoxWide" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:padding="20dp"
-        android:id="@+id/user_stats_text"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            style="@style/BorderBoxCondensed"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vistas" />
+
+            <TextView
+                android:id="@+id/user_stats_vistas"
+                style="@style/BigNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/BorderBoxCondensed"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/areas" />
+
+            <TextView
+                android:id="@+id/user_stats_areas"
+                style="@style/BigNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_twitter_connect"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        style="@style/BorderBox" />
+        android:text="@string/twitter_connect"
+        android:layout_gravity="center"
+        android:onClick="connectTwitter" />
+    
+        <Button
+        android:id="@+id/btn_twitter_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Testing"
+        android:layout_gravity="center"
+        android:onClick="testTwitter" />
 
 </LinearLayout>

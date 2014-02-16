@@ -3,10 +3,12 @@ package sg.vista;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class VistaAdapter extends BaseAdapter {
@@ -43,11 +45,21 @@ public class VistaAdapter extends BaseAdapter {
         TextView vname = (TextView) v.findViewById(R.id.vista_name);
         TextView vdesc = (TextView)v.findViewById(R.id.vista_description);
         TextView vdist = (TextView) v.findViewById(R.id.vista_dis);
+        ImageView check = (ImageView) v.findViewById(R.id.visited_check);
 
         VistaItem vista = vistas.get(i);
         vname.setText(vista.name);
         vdesc.setText(vista.description);
         vdist.setText(vista.distance + " km");
+    	Log.i("",vista.name);
+    	Log.i("", Integer.toString(i));
+        if (vista.visited) {
+        	Log.i("","Visited!!");
+        	check.setVisibility(View.VISIBLE);
+        }
+        else {
+        	check.setVisibility(View.GONE);
+        }
         return v;
 	}
 

@@ -51,6 +51,9 @@
             android:name="sg.vista.AreaActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="sg.vista.TwitterAuth"
+            android:label="@string/app_name"></activity>
     </application>
 
 </manifest>

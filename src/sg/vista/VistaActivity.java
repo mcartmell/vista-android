@@ -17,6 +17,10 @@ public class VistaActivity extends ActionBarActivity {
     	return getApplicationContext();
     }
     
+    public SharedPreferences.Editor getEditor() {
+    	return config().edit();
+    }
+    
     public Boolean readToken() {
 		SharedPreferences cfg = config();
 		String token = cfg.getString("user_token", null);
