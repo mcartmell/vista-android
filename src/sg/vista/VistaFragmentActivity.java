@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -16,7 +17,10 @@ public class VistaFragmentActivity extends FragmentActivity {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		return settings;
 	}
-
+    public SharedPreferences prefs() {
+    	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+    	return sp;
+    }
 	public Context c() {
 		return getApplicationContext();
 	}

@@ -39,6 +39,7 @@ public class Twitter {
     
     // Send a tweet to Twitter with exact latitude & longitude
     public void postTweet(String tweet) {
+    	if (!hasToken()) return;
         String baseUrl = "https://api.twitter.com/1.1/statuses/update.json";
         Twitter t = Twitter.getInstance();
         OAuth10Request request = OAuthRequest.newInstance(baseUrl, t.token, t.service, new OnRequestCompleteListener() {

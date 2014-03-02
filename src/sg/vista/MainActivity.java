@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
 import com.loopj.android.http.RequestParams;
 
 import android.app.ActionBar;
@@ -42,9 +43,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends VistaFragmentActivity implements ActionBar.TabListener,GooglePlayServicesClient.ConnectionCallbacks,
-GooglePlayServicesClient.OnConnectionFailedListener {
+GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
 
 	public static final int TWITTER_INTENT = 0;
+	public static final int SETTINGS_INTENT = 1;
+	
+	public static final int PAGE_CURRENTAREA = 0;
+	public static final int PAGE_PROFILE = 1;
+	public static final int PAGE_EXPLORE = 2;
 	JSONObject mLocation;
 	Fragment[] mFragments = new Fragment[3];
 	
@@ -125,7 +131,9 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
+        Vista.stopLocationUpdates((LocationListener) this);
         Vista.mLocationClient.disconnect();
+
         super.onStop();
     }
     
@@ -133,31 +141,39 @@ GooglePlayServicesClient.OnConnectionFailedListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+       
         return true;
     }
-    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+ 
+        case R.id.action_settings:
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivityForResult(i, SETTINGS_INTENT);
+            break;
+ 
+        }
+ 
+        return true;
+    }    
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
         switch(tab.getPosition()) {
-        case 0:
-        	try {
-				getLocation();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        case PAGE_CURRENTAREA:
+        	requestLocation();
         	break;
-        case 1:
-        	if (mFragments[1] != null) {
-        	  ((ProfileFragment) mFragments[1]).refresh();
+        case PAGE_PROFILE:
+        	if (mFragments[PAGE_PROFILE] != null) {
+        	  ((ProfileFragment) mFragments[PAGE_PROFILE]).refresh();
         	}
         	break;
-        case 2:
-        	if (mFragments[2] != null) {
-          	  ((ExploreFragment) mFragments[2]).refresh();
+        case PAGE_EXPLORE:
+        	if (mFragments[PAGE_EXPLORE] != null) {
+          	  ((ExploreFragment) mFragments[PAGE_EXPLORE]).refresh();
           	}
         	break;
         default: ;
@@ -166,6 +182,8 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    	int i = tab.getPosition();
+    	((ProgressFragment) mFragments[i]).setContentShown(false);
     }
 
     @Override
@@ -220,18 +238,33 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
-                case 0:
+                case PAGE_CURRENTAREA:
                     return "Current area";
-                case 1:
+                case PAGE_PROFILE:
                     return "My profile";
-                case 2:
+                case PAGE_EXPLORE:
                     return "Explore";
             }
             return null;
         }
     }
-    
+	
+    // Delayed location update
+	public void requestLocation() {
+		// show loader until location becomes available
+		if (Vista.requestLocationUpdates((LocationListener) this)) {
+			if (mFragments[PAGE_CURRENTAREA] != null) {
+				ProgressFragment frag = (ProgressFragment) mFragments[PAGE_CURRENTAREA];
+				if (frag.getContentView() != null) {
+					frag.setContentShown(false);
+				}
+			}
+		}
+	}
+	
+	// Get location using last known location
     public void getLocation() throws JSONException {
+    	if (mViewPager.getCurrentItem() != PAGE_CURRENTAREA) return;
     	if (!Vista.mLocationClient.isConnected()) {
     		return;
     	}
@@ -301,19 +334,19 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		try {
-			getLocation();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Log.i("","requesting GPS location");
+		requestLocation();
+
 	}
+
 
 	@Override
 	public void onDisconnected() {
+		
 		// TODO Auto-generated method stub
 		
 	}
+
     
     public void connectTwitter(View v) {
         Intent intent = new Intent(this, TwitterAuth.class);
@@ -331,5 +364,23 @@ GooglePlayServicesClient.OnConnectionFailedListener {
         	saveTwitterToken(data);
         	((ProfileFragment) mFragments[1]).refresh();
         }
+        if (requestCode == SETTINGS_INTENT) {
+
+        }
     }
+
+	@Override
+	// When we get a location update, show the location and stop gps updates
+	public void onLocationChanged(Location location) {
+		Log.i("", "Got GPS location");
+		try {
+			getLocation();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Vista.stopLocationUpdates((LocationListener) this);
+		// TODO Auto-generated method stub
+		
+	}
 }

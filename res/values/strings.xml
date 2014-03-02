@@ -15,5 +15,6 @@
 	<string name="vistas">Vistas</string>
 	<string name="areas">Areas</string>
 	<string name="twitter_connect">Connect to Twitter</string>
+	<string name="twitter_enabled">Post updates to Twitter</string>
 	
 </resources>

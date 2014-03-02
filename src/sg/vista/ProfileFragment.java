@@ -17,23 +17,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends ProgressFragment {
 	public View mTwitterButton;
-	
+	public View mRootView;
+
 	public ProfileFragment() {
 	}
 	
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        mTwitterButton = rootView.findViewById(R.id.btn_twitter_connect);
+        mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        mTwitterButton = mRootView.findViewById(R.id.btn_twitter_connect);
         // rootView.setTag(getArguments().getInt("section_number"));
-        return rootView;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
     
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setContentView(mRootView);
+		setContentShown(false);
+	}
     public void refresh() {
     	RequestParams rp = new RequestParams();
+    	setContentShown(false);
     	// Hide Twitter button if already connected to Twitter
-    	if (false && Twitter.getInstance().hasToken()) {
+    	if (Twitter.getInstance().hasToken()) {
     		mTwitterButton.setVisibility(View.GONE);
     	}
     	else {
@@ -44,13 +52,14 @@ public class ProfileFragment extends Fragment {
 			public void onResponse(JSONObject json) throws JSONException {
 				// TODO Auto-generated method stub
 				showInfo(json);
+				setContentShown(true);
 			}
     	});
     }
     
     public void showInfo(JSONObject profile) throws JSONException {
     	TextView tName = (TextView) getActivity().findViewById(R.id.user_name);
-    	tName.setText(profile.getString("email"));
+    	tName.setText(profile.getJSONObject("user").getString("username"));
     	TextView tvistas = (TextView) getActivity().findViewById(R.id.user_stats_vistas);
     	TextView tareas = (TextView) getActivity().findViewById(R.id.user_stats_areas);
 

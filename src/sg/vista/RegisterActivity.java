@@ -37,9 +37,12 @@ public class RegisterActivity extends VistaActivity {
     	final String em = email.getText().toString();
     	EditText password = (EditText) findViewById(R.id.reg_password);
     	String pass = password.getText().toString();
+    	EditText user = (EditText) findViewById(R.id.reg_username);
+    	String username = user.getText().toString();
     	RequestParams rp = new RequestParams();
     	rp.put("email", em);
     	rp.put("password", pass);
+    	rp.put("username", username);
     	final VistaActivity a = this;
     	Vista.post(c(), "/api/v1/register.json", rp, new VistaResponse() {
 

@@ -21,20 +21,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ShowAreaFragment extends Fragment {
+public class ShowAreaFragment extends ProgressFragment {
 	JSONObject mVistas;
 	View mRootView;
+	String mCurrentArea;
 
 	public ShowAreaFragment() {
 	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_show_area, container, false);
-		return mRootView;
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		setContentView(mRootView);
+
 		Bundle b = getActivity().getIntent().getExtras();
 		if (b != null && b.containsKey("area_name")) {
 			try {
@@ -44,10 +47,13 @@ public class ShowAreaFragment extends Fragment {
 			}
 			((TextView) mRootView.findViewById(R.id.current_area)).setText(b.getString("area_name"));
 		}
+		setContentShown(false);
 	}
+	
 	public void getVistas(String area_name) throws JSONException {
 		RequestParams rp = Vista.latLongParams();
 		rp.put("area_name", area_name);
+		mCurrentArea = area_name;
 		Vista.get(getActivity().getApplicationContext(), "/geo/vistas", rp, new Vista.VistaResponse() {
 			Context ctx = getActivity().getApplicationContext();	
 			@Override
@@ -83,12 +89,22 @@ public class ShowAreaFragment extends Fragment {
 				setStats();
 				
 				// Set static map
-				String mapURL = json.getString("static_map");
-				DownloadImageTask.dl(mapURL, (ImageView) mRootView.findViewById(R.id.area_static_map));
+				showStaticMap();
+				//String mapURL = json.getString("static_map");
+				//DownloadImageTask.dl(mapURL, (ImageView) mRootView.findViewById(R.id.area_static_map));
+				setContentShown(true);
 			}
 		});
 	}
 
+	public void showStaticMap() {
+		ImageView iv = (ImageView) mRootView.findViewById(R.id.area_static_map);
+		String map_id = "map_" + mCurrentArea.toLowerCase().replaceAll("[^a-z0-9_.]", "_");
+		int id = getResources().getIdentifier("sg.vista:drawable/" + map_id, null, null);
+		Log.i("", map_id);
+		Log.i("", Integer.toString(id));
+		iv.setImageResource(id);
+	}
 	public void setStats() throws JSONException {
 		int visited = mVistas.getInt("visited");
 		int total = mVistas.getInt("total");

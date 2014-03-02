@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sg.vista.Vista.VistaResponse;
+import sg.vista.Twitter;
 
 import com.loopj.android.http.RequestParams;
 
@@ -211,10 +212,17 @@ public class VistaItemActivity extends VistaActivity {
 				loadUserPhotos(mCurrentVista.vista_id);
 				// Set the visited badge
 				setVisited(true);
+				// Send a tweet
+				sendTweet();
 			}
 		});
     }
     
+    public void sendTweet() {
+    	if (!(prefs().getBoolean("twitter_enabled", false))) return;
+    	String tweet = "I'm at " + mCurrentVista + "! @sgVista";
+    	Twitter.getInstance().postTweet(tweet);
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         resuming_from_activity = true;

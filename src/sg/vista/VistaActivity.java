@@ -3,6 +3,7 @@ package sg.vista;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
@@ -17,6 +18,10 @@ public class VistaActivity extends ActionBarActivity {
     	return getApplicationContext();
     }
     
+    public SharedPreferences prefs() {
+    	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+    	return sp;
+    }
     public SharedPreferences.Editor getEditor() {
     	return config().edit();
     }

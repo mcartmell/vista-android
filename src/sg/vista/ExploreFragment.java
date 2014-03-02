@@ -20,21 +20,31 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class ExploreFragment extends Fragment {
+public class ExploreFragment extends ProgressFragment {
+
+	public View mRootView;
+	
 	public ExploreFragment() {
 	}
 	
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_explore, container, false);
-        return rootView;
+        mRootView = inflater.inflate(R.layout.fragment_explore, container, false);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
-    
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setContentView(mRootView);
+		setContentShown(false);
+	}
     public void refresh() {
     	RequestParams rp = new RequestParams();
+    	setContentShown(false);
     	Vista.get(getActivity().getApplicationContext(), "/user/area_stats", rp, new VistaResponse() {
 			@Override
 			public void onResponse(JSONObject json) throws JSONException {
 				populateList(json);
+				setContentShown(true);
 			}
     	});
     }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <Preference 
+        android:key="twitter_connect"
+        android:title="@string/twitter_connect">
+    	<intent android:action="android.intent.action.VIEW"
+        	android:targetPackage="sg.vista"
+        	android:targetClass="sg.vista.TwitterAuth" />
+    </Preference>
+    <CheckBoxPreference 
+        android:key="twitter_enabled"
+        android:title="@string/twitter_enabled"
+        android:defaultValue="true"/>
+    
+
+</PreferenceScreen>
