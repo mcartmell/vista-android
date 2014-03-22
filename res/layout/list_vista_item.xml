@@ -54,7 +54,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 	<LinearLayout
 	        android:layout_width="fill_parent"
-    		android:layout_height="match_parent"
+    		android:layout_height="wrap_content"
     		android:orientation="vertical" >
         <TextView
             style="@style/TVStyle"
@@ -63,12 +63,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#000000"/>
-	    <TextView
-	        style="@style/TVStyle"
-            android:id="@+id/vista_directions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
 	</LinearLayout>
     </LinearLayout>
 </LinearLayout>

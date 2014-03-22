@@ -342,20 +342,14 @@ GooglePlayServicesClient.OnConnectionFailedListener,LocationListener {
 
 	@Override
 	public void onDisconnected() {
-		
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
-
-    
+   
     public void connectTwitter(View v) {
         Intent intent = new Intent(this, TwitterAuth.class);
         startActivityForResult(intent, TWITTER_INTENT);
     }
-    
-    public void testTwitter(View v) {
-    	Twitter.getInstance().postTweet("-_-");
-    }
+
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

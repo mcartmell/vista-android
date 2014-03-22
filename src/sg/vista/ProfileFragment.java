@@ -41,7 +41,7 @@ public class ProfileFragment extends ProgressFragment {
     	RequestParams rp = new RequestParams();
     	setContentShown(false);
     	// Hide Twitter button if already connected to Twitter
-    	if (Twitter.getInstance().hasToken()) {
+    	if (false && Twitter.getInstance().hasToken()) {
     		mTwitterButton.setVisibility(View.GONE);
     	}
     	else {

@@ -16,6 +16,8 @@ gen/
 .gradle/
 build/
 
+src/sg/vista/VistaApiKey.java
+
 # Local configuration file (sdk path, etc)
 local.properties
 

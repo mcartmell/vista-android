@@ -64,13 +64,6 @@
         android:text="@string/twitter_connect"
         android:layout_gravity="center"
         android:onClick="connectTwitter" />
-    
-        <Button
-        android:id="@+id/btn_twitter_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Testing"
-        android:layout_gravity="center"
-        android:onClick="testTwitter" />
+
 
 </LinearLayout>
